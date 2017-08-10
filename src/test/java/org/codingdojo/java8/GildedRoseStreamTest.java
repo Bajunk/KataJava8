@@ -46,7 +46,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        List<String> itemsName = new ArrayList<>();
+        List<String> itemsName = shop.getItems().stream().map(Item::getName).sorted().collect(Collectors.toList());
 
         //Then
         assertThat(itemsName).containsExactly("+5 Dexterity Vest",
@@ -64,7 +64,8 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        List<Integer> itemsSellIn = new ArrayList<>();
+        List<Integer> itemsSellIn = shop.getItems().stream().map(Item::getSellIn)
+                                        .sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 
         //Then
         assertThat(itemsSellIn).containsExactly(50,20,15,10,10,5,0);
@@ -76,7 +77,10 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        List<Item> items = new ArrayList<>();
+        List<Item> items = shop.getItems().stream()
+                .sorted(Comparator.comparing(Item::getSellIn).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
 
         //Then
         assertThat(items).extracting("name")
@@ -91,7 +95,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        List<Integer> itemsQuality = new ArrayList<>();
+        List<Integer> itemsQuality = shop.getItems().stream().map(Item::getQuality).distinct().collect(Collectors.toList());
 
         //Then
         assertThat(itemsQuality).containsExactlyInAnyOrder(0,10,20,25,30);
@@ -103,7 +107,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        Integer total = 0;
+        Integer total = shop.getItems().stream().mapToInt(Item::getSellIn).sum();
 
         //Then
         assertThat(total).isEqualTo(110);
@@ -115,7 +119,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        Integer maxQuality = 0;
+        Integer maxQuality = shop.getItems().stream().mapToInt(Item::getQuality).max().orElse(0);
 
         //Then
         assertThat(maxQuality).isEqualTo(30);
@@ -127,7 +131,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        Integer minSellIn = 0;
+        Integer minSellIn = shop.getItems().stream().mapToInt(Item::getSellIn).min().orElse(0);
 
         //Then
         assertThat(minSellIn).isZero();
@@ -139,7 +143,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        Item firstItem = null;
+        Item firstItem = shop.getItems().stream().findFirst().orElse(null);
 
         //Then
         assertThat(firstItem.getName()).isEqualTo("+5 Dexterity Vest");
@@ -153,7 +157,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        boolean hasItemWithNoQuality = false;
+        boolean hasItemWithNoQuality = shop.getItems().stream().anyMatch(item->item.getQuality()==0);
 
         //Then
         assertThat(hasItemWithNoQuality).isTrue();
@@ -165,7 +169,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        boolean allItemsHaveName = false;
+        boolean allItemsHaveName = shop.getItems().stream().noneMatch(item -> Strings.isNullOrEmpty(item.getName()));
 
         //Then
         assertThat(allItemsHaveName).isTrue();
