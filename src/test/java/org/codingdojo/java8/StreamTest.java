@@ -17,7 +17,7 @@ public class StreamTest {
         //Given
 
         //When
-        List<String> abcList = new ArrayList<String>();
+        List<String> abcList = Stream.of("a","b","c").collect(Collectors.toList());
 
         //Then
 
@@ -29,7 +29,7 @@ public class StreamTest {
         //Given
 
         //When
-        List<Integer> numbersList = new ArrayList<Integer>();
+        List<Integer> numbersList = Stream.iterate(0, x->x+3).limit(10).collect(Collectors.toList());
 
         //Then
         assertThat(numbersList).contains(0, 3, 6, 9, 12, 15, 18, 21, 24, 27);
