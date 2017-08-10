@@ -23,7 +23,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        List<Item> items = new ArrayList<>();
+        List<Item> items = shop.getItems().stream().filter(item -> item.getSellIn() == 10).collect(Collectors.toList());
 
         //Then
         assertThat(items).hasSize(2).extracting("name").containsOnly("+5 Dexterity Vest", "Conjured Mana Cake");
