@@ -193,7 +193,8 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        Map<Integer, Long> qualitiesItems = new HashMap<>();
+        Map<Integer, Long> qualitiesItems = shop.getItems().stream()
+                                                .collect(Collectors.groupingBy(Item::getQuality, Collectors.counting()));
 
         //Then
         assertThat(qualitiesItems).hasSize(5).containsOnly(
@@ -210,7 +211,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        double averageSellIn = 0;
+        double averageSellIn = shop.getItems().stream().mapToInt(Item::getSellIn).average().getAsDouble();
 
         //Then
         assertThat(averageSellIn).isEqualTo(15.71, offset(0.01));
@@ -222,7 +223,10 @@ public class GildedRoseStreamTest {
         List<GildedRose> shops = company.getShops();
 
         //When
-        List<Integer> qualities = new ArrayList<>();
+        List<Integer> qualities = shops.stream()
+                .flatMap(glidedRose -> glidedRose.getItems().stream())
+                .map(Item::getQuality)
+                .collect(Collectors.toList());
 
         //Then
         assertThat(qualities).containsOnly(10,0,10,25,20,30,20,0,0,50,49,20,1);
@@ -234,7 +238,10 @@ public class GildedRoseStreamTest {
         List<GildedRose> shops = company.getShops();
 
         //When
-        Integer priceOfAllItems = 0;
+        Integer priceOfAllItems = shops.stream()
+                .flatMap(shop->shop.getItems().stream())
+                .mapToInt(Item::getSellIn)
+                .sum();
 
         //Then
         assertThat(priceOfAllItems).isEqualTo(155);
@@ -246,7 +253,11 @@ public class GildedRoseStreamTest {
         List<GildedRose> shops = company.getShops();
 
         //When
-        List<String> notSellingItems = new ArrayList<>();
+        List<String> notSellingItems = shops.stream()
+                .flatMap(shop->shop.getItems().stream())
+                .filter(item -> item.getSellIn()==0)
+                .map(Item::getName)
+                .collect(Collectors.toList());
 
         //Then
         assertThat(notSellingItems).containsOnly("+5 Dexterity Vest", "+5 Dexterity Vest", "Backstage passes to a TAFKAL80ETC concert");
