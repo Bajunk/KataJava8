@@ -1,11 +1,10 @@
 package org.codingdojo.java8;
 
+import org.assertj.core.util.Strings;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
@@ -35,7 +34,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        List<Integer> itemsQuality = new ArrayList<>();
+        List<Integer> itemsQuality = shop.getItems().stream().map(Item::getQuality).collect(Collectors.toList());
 
         //Then
         assertThat(itemsQuality).containsExactlyInAnyOrder(10,0,10,25,20,30,20);
