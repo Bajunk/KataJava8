@@ -181,7 +181,7 @@ public class GildedRoseStreamTest {
         GildedRose shop = company.shop();
 
         //When
-        String names = "";
+        String names = shop.getItems().stream().map(Item::getName).collect(Collectors.joining(",","[","]"));
 
         //Then
         assertThat(names).isEqualTo("[+5 Dexterity Vest,+5 Dexterity Vest,Aged Brie,Sulfuras, Hand of Ragnaros,Backstage passes to a TAFKAL80ETC concert,Backstage passes to a TAFKAL80ETC concert,Conjured Mana Cake]");
